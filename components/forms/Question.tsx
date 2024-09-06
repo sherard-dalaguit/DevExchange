@@ -37,12 +37,6 @@ const Question = ({ mongoUserId }: Props) => {
     const pathname = usePathname()
 
     const { mode } = useTheme()
-    // const [editorKey, setEditorKey] = useState(0)
-
-    // useEffect(() => {
-    //     // reloads the TinyMCE Editor, allowing theme changes without re-rendering the page
-    //     setEditorKey((prevKey) => prevKey + 1)
-    //   }, [mode]);
 
     const form = useForm<z.infer<typeof QuestionsSchema>>({
         resolver: zodResolver(QuestionsSchema),
@@ -58,8 +52,6 @@ const Question = ({ mongoUserId }: Props) => {
         console.log(values)
 
         try {
-            // make an async call to your API -> create a question
-            // contain all form data
 
             await createQuestion({
                 title: values.title,
@@ -68,8 +60,6 @@ const Question = ({ mongoUserId }: Props) => {
                 author: JSON.parse(mongoUserId),
                 path: pathname
             });
-
-            // navigate to home page
 
             router.push('/')
         } catch (error) {
@@ -156,7 +146,6 @@ const Question = ({ mongoUserId }: Props) => {
                     <FormControl className="mt-3.5">
                         <Editor
                             apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
-                            // key={editorKey}
                             onInit={(_evt, editor) => {
                                 // @ts-ignore
                                 editorRef.current = editor
