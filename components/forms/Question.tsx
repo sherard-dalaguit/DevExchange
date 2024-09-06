@@ -20,20 +20,29 @@ import { QuestionsSchema } from "@/lib/validations"
 import { Badge } from '../ui/badge';
 import Image from "next/image"
 import { useTheme } from '@/context/ThemeProvider'
+import { createQuestion } from '@/lib/actions/question.action';
+import { useRouter, usePathname } from 'next/navigation';
 
 const type: any = 'create'
 
-const Question = () => {
+interface Props {
+    mongoUserId: string;
+}
+
+const Question = ({ mongoUserId }: Props) => {
 
     const editorRef = useRef<Editor | null>(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const { mode } = useTheme()
-    const [editorKey, setEditorKey] = useState(0)
+    const router = useRouter()
+    const pathname = usePathname()
 
-    useEffect(() => {
-        // reloads the TinyMCE Editor, allowing theme changes without re-rendering the page
-        setEditorKey((prevKey) => prevKey + 1)
-      }, [mode]);
+    const { mode } = useTheme()
+    // const [editorKey, setEditorKey] = useState(0)
+
+    // useEffect(() => {
+    //     // reloads the TinyMCE Editor, allowing theme changes without re-rendering the page
+    //     setEditorKey((prevKey) => prevKey + 1)
+    //   }, [mode]);
 
     const form = useForm<z.infer<typeof QuestionsSchema>>({
         resolver: zodResolver(QuestionsSchema),
@@ -44,7 +53,7 @@ const Question = () => {
         },
     })
 
-    function onSubmit(values: z.infer<typeof QuestionsSchema>) {
+    async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
         setIsSubmitting(true);
         console.log(values)
 
@@ -52,7 +61,17 @@ const Question = () => {
             // make an async call to your API -> create a question
             // contain all form data
 
+            await createQuestion({
+                title: values.title,
+                content: values.explanation,
+                tags: values.tags,
+                author: JSON.parse(mongoUserId),
+                path: pathname
+            });
+
             // navigate to home page
+
+            router.push('/')
         } catch (error) {
             
         } finally {
@@ -137,33 +156,35 @@ const Question = () => {
                     <FormControl className="mt-3.5">
                         <Editor
                             apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
-                            key={editorKey}
+                            // key={editorKey}
                             onInit={(_evt, editor) => {
                                 // @ts-ignore
                                 editorRef.current = editor
                             }}
+                            onBlur={field.onBlur}
+                            onEditorChange={(content) => field.onChange(content)}
                             initialValue=""
                             init={{
-                            height: 350,
-                            menubar: false,
-                            plugins: [
-                                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-                                'anchor', 'searchreplace', 'visualblocks', 'fullscreen',
-                                'insertdatetime', 'media', 'table', 'codesample'
-                            ],
-                            toolbar: 
-                                'undo redo | ' +
-                                'codesample | bold italic forecolor | alignleft aligncenter |' +
-                                'alignright alignjustify | bullist numlist ',
-                            content_style: 'body { font-family:Inter; font-size:16px }',
-                            skin: mode === 'dark' ? 'oxide-dark' : 'oxide',
-                            content_css: mode === 'dark' ? 'dark' : 'default'
+                                height: 350,
+                                menubar: false,
+                                plugins: [
+                                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                                    'anchor', 'searchreplace', 'visualblocks', 'fullscreen',
+                                    'insertdatetime', 'media', 'table', 'codesample'
+                                ],
+                                toolbar: 
+                                    'undo redo | ' +
+                                    'codesample | bold italic forecolor | alignleft aligncenter |' +
+                                    'alignright alignjustify | bullist numlist ',
+                                content_style: 'body { font-family:Inter; font-size:16px }',
+                                skin: mode === 'dark' ? 'oxide-dark' : 'oxide',
+                                content_css: mode === 'dark' ? 'dark' : 'light'
                             }}
                         />
                     </FormControl>
                     
                     <FormDescription className="body-regular mt-2.5 text-light-500">
-                        Introduce the problem and expand on what you put in the title. Minimum 20 characters.
+                        Introduce the problem and expand on what you put in the title. Minimum 100 characters.
                     </FormDescription>
                     <FormMessage className="text-red-500"/>
                     </FormItem>

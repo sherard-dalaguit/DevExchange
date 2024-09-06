@@ -6,64 +6,14 @@ import LocalSearch from "@/components/shared/search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
 import Link from "next/link";
+import { getQuestions } from "@/lib/actions/question.action";
 
-const questions = [
-    {
-        _id: "1",
-        title: "Cascading Deletes in SQLAlchemy?",
-        tags: [
-            { _id: "1", name: "python" },
-            { _id: "2", name: "sql" },
-        ],
-        author: { _id: "1", name: "John Doe", picture: "/images/john.jpg" },
-        upvotes: 10,
-        views: 100,
-        answers: [{}, {}], // Random empty objects as placeholders
-        createdAt: new Date("2021-09-01T12:00:00.000Z"),
-    },
-    {
-        _id: "2",
-        title: "How to center a div?",
-        tags: [
-            { _id: "1", name: "css" },
-            { _id: "2", name: "sql" },
-        ],
-        author: { _id: "2", name: "Lebron James", picture: "/images/lebron.jpg" },
-        upvotes: 14,
-        views: 132,
-        answers: [{}, {}, {}], // 3 answers as placeholders
-        createdAt: new Date("2022-03-01T12:00:00.000Z"),
-    },
-    {
-        _id: "3",
-        title:
-            "Best practices for data fetching in a Next.js application with Server-Side Rendering (SSR)?",
-        tags: [
-            { _id: "1", name: "next" },
-            { _id: "2", name: "ssr" },
-        ],
-        author: { _id: "3", name: "The Coding Sloth", picture: "/images/sloth.jpg" },
-        upvotes: 19,
-        views: 176,
-        answers: [{}, {}, {}, {}], // 4 answers as placeholders
-        createdAt: new Date("2022-07-01T12:00:00.000Z"),
-    },
-    {
-        _id: "4",
-        title: "How do I use express as a custom server in Next.js?",
-        tags: [
-            { _id: "1", name: "next" },
-            { _id: "2", name: "express" },
-        ],
-        author: { _id: "4", name: "Roger Federer", picture: "/images/roger.jpg" },
-        upvotes: 23,
-        views: 324,
-        answers: [{}, {}, {}, {}, {}, {}], // 6 answers as placeholders
-        createdAt: new Date("2023-05-01T12:00:00.000Z"),
-    },
-];
+export default async function Home() {
 
-export default function Home() {
+    const result = await getQuestions({});
+
+    console.log(result.questions)
+
     return (
         <>
         <div
@@ -105,8 +55,8 @@ export default function Home() {
 
         <div className="mt-10 flex w-full flex-col gap-6">
             {/* Looping through questions */}
-            {questions.length > 0 ? (
-            questions.map((question) => {
+            {result.questions.length > 0 ? (
+            result.questions.map((question) => {
                 return (
                     <QuestionCard 
                         key={question._id}
