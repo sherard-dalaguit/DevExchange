@@ -35,6 +35,10 @@ export const getTimestamp = (createdAt: Date): string => {
 };
   
 export const formatBigNumber = (num: number): string => {
+    if (num === undefined || num === null) {
+        return '0';
+    }
+
     if (num >= 1_000_000) {
         return `${(num / 1_000_000).toFixed(1)}M`; // Convert to millions
     } else if (num >= 1_000) {
