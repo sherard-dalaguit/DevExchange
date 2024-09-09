@@ -47,3 +47,8 @@ export const formatBigNumber = (num: number): string => {
         return num.toString(); // Return the number as is if it's less than 1000
     }
 };  
+
+export function getJoinedDate(date: Date): string {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long' };
+    return date.toLocaleDateString('en-US', options);
+}
