@@ -6,9 +6,7 @@ import { connectToDatabase } from "../mongoose"
 import { CreateUserParams, DeleteUserParams, GetAllUsersParams, GetSavedQuestionsParams, ToggleSaveQuestionParams, UpdateUserParams } from "./shared.types";
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
-import path from "path";
 import Tag from "@/database/tag.model";
-import { Jersey_10 } from "next/font/google";
 
 export async function getUserById(params: any) {
     try {
