@@ -1,4 +1,6 @@
+import AnswersTab from '@/components/shared/AnswersTab'
 import ProfileLink from '@/components/shared/ProfileLink'
+import QuestionTab from '@/components/shared/QuestionTab'
 import Stats from '@/components/shared/Stats'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -85,8 +87,20 @@ const Page = async ({ params, searchParams }: URLProps) => {
                         <TabsTrigger value="top-posts" className="tab">Top Posts</TabsTrigger>
                         <TabsTrigger value="answers" className="tab">Answers</TabsTrigger>
                     </TabsList>
-                    <TabsContent value="top-posts">POSTS</TabsContent>
-                    <TabsContent value="answers">ANSWERS</TabsContent>
+                    <TabsContent value="top-posts" className="mt-5 flex w-full flex-col gap-6">
+                        <QuestionTab 
+                            searchParams={searchParams}
+                            userId={userInfo.user._id}
+                            clerkId={userInfo.user.clerkId}
+                        />
+                    </TabsContent>
+                    <TabsContent value="answers" className="mt-5 flex w-full flex-col gap-6">
+                        <AnswersTab 
+                            searchParams={searchParams}
+                            userId={userInfo.user._id}
+                            clerkId={userInfo.user.clerkId}
+                        />
+                    </TabsContent>
                 </Tabs>
             </div>
         </>
