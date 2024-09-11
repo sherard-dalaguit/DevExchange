@@ -1,7 +1,7 @@
 "use server";
 
 import { FilterQuery } from "mongoose";
-import User from "@/database/user.model";
+import User, { IUser } from "@/database/user.model";
 import { connectToDatabase } from "../mongoose";
 import {
   CreateUserParams,
@@ -101,9 +101,18 @@ export async function getAllUsers(params: GetAllUsersParams) {
   try {
     connectToDatabase();
 
-    // const { page = 1, pageSize = 20, filter, searchQuery } = params;
+    const { searchQuery } = params;
 
-    const users = await User.find({}).sort({ createdAt: -1 });
+    const query: FilterQuery<IUser> = {}
+
+    if (searchQuery) {
+      query.$or = [
+        { name: { $regex: new RegExp(searchQuery, "i")}},
+        { username: { $regex: new RegExp(searchQuery, "i")}}
+      ]
+    }
+
+    const users = await User.find(query).sort({ createdAt: -1 });
 
     return { users };
   } catch (error) {
@@ -150,7 +159,7 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
   try {
     connectToDatabase();
 
-    const { clerkId, searchQuery, filter, page = 1, pageSize = 10 } = params;
+    const { clerkId, searchQuery } = params;
 
     const query: FilterQuery<IQuestion> = searchQuery
       ? { title: { $regex: new RegExp(searchQuery, "i") } }

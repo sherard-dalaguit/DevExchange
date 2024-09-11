@@ -1,6 +1,6 @@
 "use server";
 
-import Question from "@/database/question.model";
+import Question, { IQuestion } from "@/database/question.model";
 import { connectToDatabase } from "../mongoose";
 import Tag from "@/database/tag.model";
 import { CreateQuestionParams, DeleteQuestionParams, EditQuestionParams, GetQuestionByIdParams, GetQuestionsParams, QuestionVoteParams } from "./shared.types";
@@ -8,12 +8,24 @@ import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
 import Answer from "@/database/answer.model";
 import Interaction from "@/database/interaction.model";
+import { FilterQuery } from "mongoose";
 
 export async function getQuestions(params: GetQuestionsParams) {
     try {
         connectToDatabase();
 
-        const questions = await Question.find({})
+        const { searchQuery } = params;
+
+        const query: FilterQuery<IQuestion> = {};
+
+        if (searchQuery) {
+            query.$or = [
+                { title: { $regex: new RegExp(searchQuery, "i")}},
+                { content: { $regex: new RegExp(searchQuery, "i")}}
+            ]
+        }
+
+        const questions = await Question.find(query)
             .populate({ path: 'tags', model: Tag })
             .populate({ path: 'author', model: User })
             .sort({ createdAt: -1 })

@@ -37,22 +37,15 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
     const pathname = usePathname()
     const { mode } = useTheme()
 
-    let parsedQuestionDetails = { _id: "", title: "", content: "", tags: [] };
-    if (questionDetails) {
-        try {
-            parsedQuestionDetails = JSON.parse(questionDetails);
-        } catch (error) {
-            console.error("Failed to parse question details:", error);
-        }
-    }
+    const parsedQuestionDetails = questionDetails && JSON.parse(questionDetails || '')
 
-    const groupedTags = parsedQuestionDetails.tags.map((tag: any) => tag.name)
+    const groupedTags = parsedQuestionDetails?.tags.map((tag: any) => tag.name)
 
     const form = useForm<z.infer<typeof QuestionsSchema>>({
         resolver: zodResolver(QuestionsSchema),
         defaultValues: {
-            title: parsedQuestionDetails.title || "",
-            explanation: parsedQuestionDetails.content || "",
+            title: parsedQuestionDetails?.title || "",
+            explanation: parsedQuestionDetails?.content || "",
             tags: groupedTags || []
         },
     })
@@ -170,7 +163,7 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
                             }}
                             onBlur={field.onBlur}
                             onEditorChange={(content) => field.onChange(content)}
-                            initialValue={parsedQuestionDetails.content || ''}
+                            initialValue={parsedQuestionDetails?.content || ''}
                             init={{
                                 height: 350,
                                 menubar: false,

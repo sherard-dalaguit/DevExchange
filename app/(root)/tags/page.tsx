@@ -3,10 +3,13 @@ import NoResult from "@/components/shared/NoResult";
 import LocalSearch from "@/components/shared/search/LocalSearch";
 import { TagFilters } from "@/constants/filters";
 import { getAllTags } from "@/lib/actions/tag.actions";
+import { SearchParamsProps } from "@/types";
 import Link from "next/link";
 
-export default async function Community() {
-    const result = await getAllTags({});
+export default async function Tags({ searchParams }: SearchParamsProps) {
+    const result = await getAllTags({
+        searchQuery: searchParams.q
+    });
 
     return (
         <>
