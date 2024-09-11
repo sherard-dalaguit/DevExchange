@@ -5,6 +5,7 @@ import User from "@/database/user.model";
 import { connectToDatabase } from "../mongoose";
 import {
   CreateUserParams,
+  DeleteAnswerParams,
   DeleteUserParams,
   GetAllUsersParams,
   GetSavedQuestionsParams,
@@ -17,6 +18,7 @@ import { revalidatePath } from "next/cache";
 import Question, { IQuestion } from "@/database/question.model";
 import Tag from "@/database/tag.model";
 import Answer from "@/database/answer.model";
+import Interaction from "@/database/interaction.model";
 
 export async function getUserById(params: any) {
   try {
@@ -243,4 +245,27 @@ export async function getUserInfo(params: GetUserByIdParams) {
     console.log(error);
     throw error;
   }
+}
+
+export async function deleteAnswer(params: DeleteAnswerParams) {
+    try {
+        connectToDatabase();
+
+        const { answerId, path } = params;
+
+        const answer = await Answer.findById(answerId)
+
+        if (!answer) {
+            throw new Error("Answer not found")
+        }
+
+        await answer.deleteOne({ _id: answerId })
+        await Question.updateMany({ _id: answer.question }, { $pull: { answers: answerId } })
+        await Interaction.deleteMany({ answer: answerId })
+
+        revalidatePath(path)
+    } catch(error) {
+        console.log(error)
+        throw error
+    }
 }

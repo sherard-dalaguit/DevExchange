@@ -1,19 +1,13 @@
 "use client"
 
-import React from "react";
-import { Button } from "../ui/button";
-import Link from "next/link";
-
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import HomeFilters from "../home/HomeFilters";
 
 const filterTags = [
   { name: "Newest", link: "/?filter=newest" },
