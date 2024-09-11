@@ -47,7 +47,6 @@ export async function createQuestion(params: CreateQuestionParams) {
     
         const { title, content, tags, author, path } = params;
     
-        // Create the question
         const question = await Question.create({
             title,
             content,
@@ -56,7 +55,6 @@ export async function createQuestion(params: CreateQuestionParams) {
 
         const tagDocuments = [];
 
-        // Create the tags or get them if they already exist
         for (const tag of tags) {
             const existingTag = await Tag.findOneAndUpdate(
                 { name: { $regex: new RegExp(`^${tag}$`, "i") } }, 
@@ -191,6 +189,21 @@ export async function deleteQuestion(params: DeleteQuestionParams) {
 
         revalidatePath(path)
     } catch(error) {
+        console.log(error)
+        throw error
+    }
+}
+
+export async function getHotQuestions() {
+    try {
+        connectToDatabase();
+
+        const hotQuestions = await Question.find({})
+            .sort({ views: -1, upvotes: -1 })
+            .limit(5)
+
+        return hotQuestions
+    } catch (error) {
         console.log(error)
         throw error
     }

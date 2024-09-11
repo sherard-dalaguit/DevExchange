@@ -37,7 +37,14 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
     const pathname = usePathname()
     const { mode } = useTheme()
 
-    const parsedQuestionDetails = JSON.parse(questionDetails || '')
+    let parsedQuestionDetails = { _id: "", title: "", content: "", tags: [] };
+    if (questionDetails) {
+        try {
+            parsedQuestionDetails = JSON.parse(questionDetails);
+        } catch (error) {
+            console.error("Failed to parse question details:", error);
+        }
+    }
 
     const groupedTags = parsedQuestionDetails.tags.map((tag: any) => tag.name)
 
