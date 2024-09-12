@@ -101,7 +101,7 @@ export async function getAllUsers(params: GetAllUsersParams) {
   try {
     connectToDatabase();
 
-    const { searchQuery } = params;
+    const { searchQuery, filter } = params;
 
     const query: FilterQuery<IUser> = {}
 
@@ -112,7 +112,21 @@ export async function getAllUsers(params: GetAllUsersParams) {
       ]
     }
 
-    const users = await User.find(query).sort({ createdAt: -1 });
+    let sortOptions = {};
+
+    switch (filter) {
+        case "new_users":
+            sortOptions = { joinedAt: -1 }
+            break;
+        case "old_users":
+            sortOptions = { joinedAt: 1 }
+            break;
+        case "top_contributers":
+            sortOptions = { reputation: 0 }
+            break;
+    }
+
+    const users = await User.find(query).sort(sortOptions);
 
     return { users };
   } catch (error) {
@@ -122,59 +136,79 @@ export async function getAllUsers(params: GetAllUsersParams) {
 }
 
 export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
-  try {
-    connectToDatabase();
+    try {
+        connectToDatabase();
 
-    const { userId, questionId, path } = params;
+        const { userId, questionId, path } = params;
 
-    const user = await User.findById(userId);
-    if (!user) {
-      throw new Error("User not found");
+        const user = await User.findById(userId);
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        const isSaved = user.saved.includes(questionId);
+
+        if (isSaved) {
+            await User.findByIdAndUpdate(
+                userId,
+                { $pull: { saved: questionId } },
+                { new: true }
+            );
+        } else {
+            await User.findByIdAndUpdate(
+                userId,
+                { $addToSet: { saved: questionId } },
+                { new: true }
+            );
+        }
+
+        revalidatePath(path);
+    } catch (error) {
+        console.log(error);
+        throw error;
     }
-
-    const isSaved = user.saved.includes(questionId);
-
-    if (isSaved) {
-      await User.findByIdAndUpdate(
-        userId,
-        { $pull: { saved: questionId } },
-        { new: true }
-      );
-    } else {
-      await User.findByIdAndUpdate(
-        userId,
-        { $addToSet: { saved: questionId } },
-        { new: true }
-      );
-    }
-
-    revalidatePath(path);
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
 }
 
 export async function getSavedQuestions(params: GetSavedQuestionsParams) {
   try {
     connectToDatabase();
 
-    const { clerkId, searchQuery } = params;
+    const { clerkId, searchQuery, filter } = params;
 
     const query: FilterQuery<IQuestion> = searchQuery
       ? { title: { $regex: new RegExp(searchQuery, "i") } }
       : {};
 
+    let sortOptions = {};
+
+    switch (filter) {
+        case "most_recent":
+            sortOptions = { createdAt: -1 }
+            break;
+        case "oldest":
+            sortOptions = { createdAt: 1 }
+            break;
+        case "most_voted":
+            sortOptions = { upvotes: -1 }
+            break;
+        case "most_viewed":
+            sortOptions = { views: -1 }
+            break;
+        case "most_answered":
+            sortOptions = { answers: -1 }
+            break;
+    }
+
     const user = await User.findOne({ clerkId }).populate({
-      path: "saved",
-      match: query,
-      options: {
-        sort: { createdAt: -1 },
-      },
-      populate: [
-        { path: "tags", model: Tag, select: "_id name" },
-        { path: "author", model: User, select: "_id clerkId name picture" },
-      ],
+        path: "saved",
+        match: query,
+        options: {
+            sort: sortOptions,
+        },
+        populate: [
+            { path: "tags", model: Tag, select: "_id name" },
+            { path: "author", model: User, select: "_id clerkId name picture" },
+        ],
     });
 
     if (!user) {
