@@ -64,8 +64,8 @@ const Answer = ({ question, questionId, authorId }: Props) => {
             <div className="mt-11 flex flex-col justify-between gap-5
             sm:flex-row sm:items-center sm:gap-2">
                 <h4 className="paragraph-semibold text-dark400_light800">Write your answer here</h4>
-                <Button className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5
-                text-primary-500 shadow-none dark:text-primary-500"
+                <Button className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 primary-gradient
+                text-white shadow-none"
                 onClick={() => {}}
                 >
                     <Image 
