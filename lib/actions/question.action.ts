@@ -149,7 +149,7 @@ export async function upvoteQuestion(params: QuestionVoteParams) {
         }
 
         await User.findByIdAndUpdate(userId, {
-            $inc: { reputation: hasupVoted ? -1 : 1}
+            $inc: { reputation: hasupVoted ? -2 : 2}
         })
 
         await User.findByIdAndUpdate(question.author, {
@@ -191,11 +191,11 @@ export async function downvoteQuestion(params: QuestionVoteParams) {
         }
 
         await User.findByIdAndUpdate(userId, {
-            $inc: { reputation: hasdownVoted ? 1 : -1}
+            $inc: { reputation: hasdownVoted ? -2 : 2}
         })
 
         await User.findByIdAndUpdate(question.author, {
-            $inc: { reputation: hasdownVoted ? 10 : -10}
+            $inc: { reputation: hasdownVoted ? -10 : 10}
         })
 
         revalidatePath(path)
