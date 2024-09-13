@@ -1,4 +1,5 @@
 import { getUserInfo } from '@/lib/actions/user.action'
+import { BadgeCounts } from '@/types';
 import Image from 'next/image'
 import React from 'react'
 
@@ -31,11 +32,13 @@ const StatsCard = ({ imgUrl, value, title }: StatsCardProps) => {
 }
 
 interface Props {
+    reputation: number;
     totalQuestions: number;
     totalAnswers: number;
+    badgeCounts: BadgeCounts;
 }
 
-const Stats = async ({ totalQuestions, totalAnswers }: Props) => {
+const Stats = async ({ reputation, totalQuestions, totalAnswers, badgeCounts }: Props) => {
   
     return (
         <div className="mt-10">
@@ -64,19 +67,19 @@ const Stats = async ({ totalQuestions, totalAnswers }: Props) => {
 
                 <StatsCard 
                     imgUrl="/assets/icons/gold-medal.svg"
-                    value={0}
+                    value={badgeCounts.GOLD}
                     title="Gold Badges"
                 />
 
                 <StatsCard 
                     imgUrl="/assets/icons/silver-medal.svg"
-                    value={0}
+                    value={badgeCounts.SILVER}
                     title="Silver Badges"
                 />
 
                 <StatsCard 
                     imgUrl="/assets/icons/bronze-medal.svg"
-                    value={0}
+                    value={badgeCounts.BRONZE}
                     title="Bronze Badges"
                 />
             </div>
