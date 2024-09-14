@@ -1,4 +1,3 @@
-import { getUserInfo } from '@/lib/actions/user.action'
 import { BadgeCounts } from '@/types';
 import Image from 'next/image'
 import React from 'react'

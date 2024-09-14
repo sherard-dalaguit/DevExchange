@@ -10,14 +10,6 @@ import {
 } from "@/components/ui/select";
 import { formUrlQuery } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-
-const filterTags = [
-  { name: "Newest", link: "/?filter=newest" },
-  { name: "Recommended", link: "/?filter=recommended" },
-  { name: "Frequent", link: "/?filter=frequent" },
-  { name: "Unanswered", link: "/?filter=unanswered" },
-];
 
 interface Props {
 	filters: {

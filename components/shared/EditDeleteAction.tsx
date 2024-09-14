@@ -1,7 +1,6 @@
 "use client"
 
 import Image from "next/image";
-import { Button } from "../ui/button";
 import { deleteQuestion } from "@/lib/actions/question.action";
 import { usePathname, useRouter } from "next/navigation";
 import { deleteAnswer } from "@/lib/actions/user.action";

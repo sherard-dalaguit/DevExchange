@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -130,13 +130,13 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
                     <FormControl className="mt-3.5">
                         <Input 
                             className="no-focus paragraph-regular background-light900_dark300
-                            light-border-2 text-dark-300_light700 min-h-[56px] border"
+                            light-border-2 text-dark300_light700 min-h-[56px] border"
                             {...field}
                         />
                     </FormControl>
                     
                     <FormDescription className="body-regular mt-2.5 text-light-500">
-                        Be specific and imagine you're asking a question to another person
+                        Be specific and imagine you are asking a question to another person
                     </FormDescription>
                     <FormMessage className="text-red-500"/>
                     </FormItem>
@@ -207,7 +207,7 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
                             <Input 
                                 disabled={type === 'Edit'}
                                 className="no-focus paragraph-regular background-light900_dark300
-                                light-border-2 text-dark-300_light700 min-h-[56px] border"
+                                light-border-2 text-dark300_light700 min-h-[56px] border"
                                 placeholder="Add tags..."
                                 onKeyDown={(e) => handleInputKeyDown(e, field)}
                             />
@@ -217,7 +217,7 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
                                     {field.value.map((tag: any) => {
                                         return (
                                             <Badge key={tag} className="subtle-medium
-                                            background-light800_dark300 text-light-400_light500 flex items-center
+                                            background-light800_dark300 text-light400_light500 flex items-center
                                             justify-center gap-2 rounded-md border-none px-4 py-2 capitalize"
                                             onClick={() => type !== 'Edit' ? handleTagRemove(tag, field)
                                                 : () => {}}>
