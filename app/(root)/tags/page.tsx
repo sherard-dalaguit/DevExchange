@@ -6,7 +6,11 @@ import { TagFilters } from "@/constants/filters";
 import { getAllTags } from "@/lib/actions/tag.actions";
 import { SearchParamsProps } from "@/types";
 import Link from "next/link";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+    title: 'Tags | DevExchange',
+}
 export default async function Tags({ searchParams }: SearchParamsProps) {
     const pageNumber = parseInt(searchParams.page || '1')
     

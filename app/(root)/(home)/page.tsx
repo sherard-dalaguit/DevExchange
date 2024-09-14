@@ -9,6 +9,11 @@ import Link from "next/link";
 import { getQuestions } from "@/lib/actions/question.action";
 import { SearchParamsProps } from "@/types";
 import Pagination from "@/components/shared/Pagination";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Home | DevExchange',
+}
 
 export default async function Home({ searchParams }: SearchParamsProps) {
 

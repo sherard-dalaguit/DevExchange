@@ -12,6 +12,11 @@ import { auth } from '@clerk/nextjs/server'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'Profile | DevExchange',
+}
 
 const Page = async ({ params, searchParams }: URLProps) => {
     const userInfo = await getUserInfo({ userId: params.id })

@@ -7,6 +7,11 @@ import { getSavedQuestions } from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs/server";
 import { SearchParamsProps } from "@/types";
 import Pagination from "@/components/shared/Pagination";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'Saved Questions | DevExchange',
+}
 
 export default async function Home({ searchParams }: SearchParamsProps) {
     const { userId } = auth();
