@@ -1,5 +1,6 @@
 "use client"
 
+import { toast } from '@/hooks/use-toast';
 import { downvoteAnswer, upvoteAnswer } from '@/lib/actions/answer.action';
 import { viewQuestion } from '@/lib/actions/interaction.action';
 import { downvoteQuestion, upvoteQuestion } from '@/lib/actions/question.action';
@@ -32,10 +33,20 @@ const Votes = ({ type, itemId, userId, upvotes, hasupVoted,
             questionId: JSON.parse(itemId),
             path: pathname
         })
+
+        return toast({
+            title: `Question ${!hasSaved ? 'Saved in' : 'Removed from'} your collection`,
+            variant: !hasSaved ? 'default' : 'destructive'
+        });
     }
 
     const handleVote = async (action: string) => {
-        if (!userId) return;
+        if (!userId) {
+            return toast({
+                title: 'Please log in',
+                description: "You must be logged in to perform this action"
+            })
+        };
 
         if (action === 'upvote') {
             if (type === 'Question') {
@@ -56,8 +67,10 @@ const Votes = ({ type, itemId, userId, upvotes, hasupVoted,
                 })
             }
 
-            // TODO: show a toast
-            return;
+            return toast({
+                title: `Upvote ${!hasupVoted ? 'Successful' : 'Removed'}`,
+                variant: !hasupVoted ? 'default' : 'destructive'
+            });
 
         } else if (action === 'downvote') {
             if (type === 'Question') {
@@ -77,6 +90,11 @@ const Votes = ({ type, itemId, userId, upvotes, hasupVoted,
                     path: pathname
                 })
             }
+
+            return toast({
+                title: `Downvote ${!hasupVoted ? 'Successful' : 'Removed'}`,
+                variant: !hasupVoted ? 'default' : 'destructive'
+            });
         }
     }
 
