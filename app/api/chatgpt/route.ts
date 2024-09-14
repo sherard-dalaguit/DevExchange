@@ -1,16 +1,15 @@
 import { NextResponse } from "next/server";
+import { OpenAI } from 'openai';
 require('dotenv').config();
-const { OpenAI } = require('openai');
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
-  });
+});
 
 export const POST = async (request: Request) => {
     const { question } = await request.json();
 
     try {
-
         const completion = await openai.chat.completions.create({
             model: "gpt-4o-mini",
             messages: [
