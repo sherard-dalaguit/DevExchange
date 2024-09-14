@@ -6,27 +6,44 @@ import LocalSearch from "@/components/shared/search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
 import Link from "next/link";
-import { getQuestions } from "@/lib/actions/question.action";
+import { getQuestions, getRecommendedQuestions } from "@/lib/actions/question.action";
 import { SearchParamsProps } from "@/types";
 import Pagination from "@/components/shared/Pagination";
 import type { Metadata } from 'next';
+import { auth } from "@clerk/nextjs/server";
 
 export const metadata: Metadata = {
     title: 'Home | DevExchange',
 }
 
 export default async function Home({ searchParams }: SearchParamsProps) {
-
     const pageNumber = parseInt(searchParams.page || '1')
-    
-    const result = await getQuestions({
-        searchQuery: searchParams.q,
-        filter: searchParams.filter,
-        page: pageNumber,
-        pageSize: 10
-    });
+    const { userId } = auth()
 
-    // fetch recommended questions
+    let result;
+
+    if (searchParams?.filter === 'recommended') {
+        if (userId) {
+            result = await getRecommendedQuestions({
+                userId,
+                searchQuery: searchParams.q,
+                page: pageNumber,
+                pageSize: 10
+            });
+        } else {
+            result = {
+                questions: [],
+                isNext: false,
+            }
+        }
+    } else {
+        result = await getQuestions({
+            searchQuery: searchParams.q,
+            filter: searchParams.filter,
+            page: pageNumber,
+            pageSize: 10
+        });
+    }
 
     return (
         <>
