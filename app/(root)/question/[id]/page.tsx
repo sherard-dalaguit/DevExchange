@@ -7,7 +7,6 @@ import Votes from '@/components/shared/Votes';
 import { getQuestionById } from '@/lib/actions/question.action';
 import { getUserById } from '@/lib/actions/user.action';
 import { formatBigNumber, getTimestamp } from '@/lib/utils';
-import { URLProps } from '@/types';
 import { auth } from '@clerk/nextjs/server';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -17,8 +16,8 @@ export const metadata: Metadata = {
     title: 'Question | DevExchange',
 }
 
-export default async function Page({ params, searchParams }: URLProps) {
-    const result = await getQuestionById({ questionId: params.id });
+export default async function Page({ params, searchParams }: any) {
+    
     const { userId: clerkId } = auth();
 
     let mongoUser;
@@ -26,7 +25,9 @@ export default async function Page({ params, searchParams }: URLProps) {
     if (clerkId) {
         mongoUser = await getUserById({ userId: clerkId })
     }
-
+    
+    const result = await getQuestionById({ questionId: params.id });
+    
     return (
         <>
             <div className="flex-start w-full flex-col">
@@ -50,12 +51,12 @@ export default async function Page({ params, searchParams }: URLProps) {
                         <Votes 
                             type="Question"
                             itemId={JSON.stringify(result._id)}
-                            userId={JSON.stringify(mongoUser._id)}
+                            userId={mongoUser ? JSON.stringify(mongoUser._id) : ''}
                             upvotes={result.upvotes.length}
-                            hasupVoted={result.upvotes.includes(mongoUser._id)}
+                            hasupVoted={mongoUser ? result.upvotes.includes(mongoUser._id) : false}
                             downvotes={result.downvotes.length}
-                            hasdownVoted={result.downvotes.includes(mongoUser._id)}
-                            hasSaved={mongoUser?.saved.includes(result._id)}
+                            hasdownVoted={mongoUser ? result.downvotes.includes(mongoUser._id) : false}
+                            hasSaved={mongoUser ? mongoUser.saved.includes(result._id) : false}
                         />
                     </div>    
                 </div>
@@ -105,7 +106,7 @@ export default async function Page({ params, searchParams }: URLProps) {
 
             <AllAnswers 
                 questionId={result._id}
-                userId={mongoUser._id}
+                userId={mongoUser ? mongoUser._id : ''}
                 totalAnswers={result.answers.length}
                 page={searchParams?.page}
                 filter={searchParams?.filter}
@@ -114,7 +115,7 @@ export default async function Page({ params, searchParams }: URLProps) {
             <Answer 
                 question={result.content}
                 questionId={JSON.stringify(result._id)}
-                authorId={JSON.stringify(mongoUser._id)}
+                authorId={mongoUser ? JSON.stringify(mongoUser._id) : ''}
             />
         </>
     )
