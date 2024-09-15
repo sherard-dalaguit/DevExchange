@@ -2,8 +2,8 @@
 
 A StackOverflow-inspired Q&A platform built with Next.js and Node.js, featuring advanced search capabilities, AI-generated answers, and a reputation system to foster community engagement.
 
-![DevExchange](https://github.com/user-attachments/assets/39fc80bd-a9d4-4af7-9baa-f472497e5efd)
-
+![DevExchange_3](https://github.com/user-attachments/assets/85dce43e-0dd1-42e2-9ae2-219a8866422a)
+![DevExchange_2](https://github.com/user-attachments/assets/4c4459e6-4a43-4000-8206-b9cd29af5c1b)
 
 ## Demo
 
@@ -149,4 +149,3 @@ To run the project locally, follow these steps:
 
 **Sherard Dalaguit**  
 [Email](mailto:sherard.softwaredev@gmail.com) | [LinkedIn](https://www.linkedin.com/in/sherard-d)
-
