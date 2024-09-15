@@ -79,12 +79,12 @@ const MobileNav = () => {
             </SheetClose>
 
             <SignedOut>
-                <div className="flex flex-col gap-3">
+                <div className="mt-11 flex flex-col gap-3">
                     <SheetClose asChild>
                         <Link href="/sign-in">
-                            <Button className="small-medium btn-secondary 
+                            <Button className="small-medium btn-secondary primary-gradient
                             min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
-                                <span className="primary-text-gradient">Log In</span>
+                                <span className="text-light-900">Log In</span>
                             </Button>
                         </Link>
                     </SheetClose>
